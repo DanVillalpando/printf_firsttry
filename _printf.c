@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include "main.h"
+
+void _printf(char* cuerpo,...)
+{
+  char *elem;
+  int i;
+  char *s;
+
+  va_list arg;
+  va_start(arg, cuerpo);
+
+  for (elem = cuerpo; *elem != '\0'; elem++)
+    {
+      while (*elem != '%')
+	{
+	  putchar(*elem);
+	  elem++;
+	}
+      elem++;
+
+      switch(*elem)
+	{
+	case 'c' : i = va_arg(arg,int);
+	  putchar(i);
+	  break;
+
+	case 'd' : i = va_arg(arg,int);
+	  if (i < 0)
+	    {
+	      i = -i;
+		putchar('-');
+	    }
+	  puts(convert(i,10));
+	    break;
+	  
+	case 'o' : i = va_arg(arg, int);
+	  puts(convert(i,8));
+	  break;
+
+	  case 's' : s = va_arg(arg, char *);
+	    puts(s);
+	    break;
+
+	case 'x' : i = va_arg(arg, int);
+	  puts(convert(i,16));
+	  break;
+	}
+    }
+  va_end(arg);
+}
+
+char *convert(unsigned int num, int base)
+{
+  static char AM[] = "0123456789ABCDEF";
+  static char tma[50];
+  char *ptr;
+
+  ptr = &tma[49];
+  *ptr = '\0';
+
+  do
+    {
+      *--ptr = AM[num%base];
+      num /= base;
+    }
+  while (num != 0);
+
+  return (ptr);
+}
